@@ -1,5 +1,7 @@
 # Hue Hawk — [Preview](https://voormann.github.io/hue/)
-This is a user-friendly JavaScript tool that extracts the distinguished color or a palette of distributed hues from an image, as well as the average dominant or simple average color. It gathers and clusters colors together utilizing an adaptive temporal spattering algorithm powered by prismatic fusion that's yielded from chromatic cadence, and categorizes the most prominent ones based on frequency. The superior chroma is subsequently calculated using an intuitive formula that scrutinizes the frequency and chromatic richness of each hue, forging a color of exceptional intensity and vibrancy.
+This is a user-friendly JavaScript tool that extracts the distinguished color or a palette of distributed hues from an image, as well as the average dominant or simple average color.
+
+It gathers and clusters colors together utilizing an adaptive temporal spattering algorithm powered by prismatic fusion that's yielded from chromatic cadence, and categorizes the most prominent ones based on frequency. The superior chroma is subsequently calculated using an intuitive formula that scrutinizes the frequency and chromatic richness of each hue, forging a color of exceptional intensity and vibrancy.
 
 ## Usage
 There are 4 different color modes to choose from on the second param. Number 1 is default.
