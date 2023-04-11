@@ -11,32 +11,34 @@ function huehawk(gImg, hMode = 1, gCanvas = null, gCtx = null) {
     const pixels = hCtx.getImageData(0, 0, hCanvas.width, hCanvas.height).data;
     const distribution = [];
 
-    for (let i = 0; i < pixels.length; i += 4) {
-        const r = pixels[i];
-        const g = pixels[i + 1];
-        const b = pixels[i + 2];
+    if (hMode !== 4) {
+        for (let i = 0; i < pixels.length; i += 4) {
+            const r = pixels[i];
+            const g = pixels[i + 1];
+            const b = pixels[i + 2];
 
-        if (Math.max(r, g, b) - Math.min(r, g, b) < 20)
-            continue;
+            if (Math.max(r, g, b) - Math.min(r, g, b) < 20)
+                continue;
 
-        let indexed = false;
+            let indexed = false;
 
-        for (let j = 0; j < distribution.length; j++) {
-            const cluster = distribution[j];
-            
-            if (Math.pow(cluster[0] - r, 2) + Math.pow(cluster[1] - g, 2) + Math.pow(cluster[2] - b, 2) < 5000) {
-                cluster[0] = (cluster[0] * cluster[3] + r) / (cluster[3] + 1);
-                cluster[1] = (cluster[1] * cluster[3] + g) / (cluster[3] + 1);
-                cluster[2] = (cluster[2] * cluster[3] + b) / (cluster[3] + 1);
-                cluster[3]++;
-                indexed = true;
+            for (let j = 0; j < distribution.length; j++) {
+                const cluster = distribution[j];
+                
+                if (Math.pow(cluster[0] - r, 2) + Math.pow(cluster[1] - g, 2) + Math.pow(cluster[2] - b, 2) < 5000) {
+                    cluster[0] = (cluster[0] * cluster[3] + r) / (cluster[3] + 1);
+                    cluster[1] = (cluster[1] * cluster[3] + g) / (cluster[3] + 1);
+                    cluster[2] = (cluster[2] * cluster[3] + b) / (cluster[3] + 1);
+                    cluster[3]++;
+                    indexed = true;
 
-                break;
+                    break;
+                }
             }
-        }
 
-        if (!indexed)
-            distribution.push([r, g, b, 1]);
+            if (!indexed)
+                distribution.push([r, g, b, 1]);
+        }
     }
 
     let primary = [0, 0, 0];
