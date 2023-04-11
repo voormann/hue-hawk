@@ -16,7 +16,7 @@ huehawk(image); // Example: [245, 87, 59]
 ```js
 huehawk(image, 2);
 /*
-Returns an array of arrays with indices containing colors in an RGBF format, where the last index tells the color frequency. Example:
+Example:
 [
     [245, 87, 59, 165],
     [239, 166, 151, 161],
@@ -25,6 +25,7 @@ Returns an array of arrays with indices containing colors in an RGBF format, whe
 ]
 */
 ```
+*Note: Returns an array of arrays with indices containing colors in an RGBF format, where the last index tells the color frequency.*
 
 ### Get the average dominant color
 ```js
@@ -39,6 +40,7 @@ huehawk(image, 4); // Example: [201, 116, 114]
 ### Use your own canvas and context instead
 ```js
 const canvas = document.createElement('canvas');
-const ctx = canvas.getContext('2d', { willReadFrequently: true }); // This attribute increases performance when multiple images are batched
+const ctx = canvas.getContext('2d', { willReadFrequently: true });
 huehawk(image, 1, canvas, ctx); // Example: [245, 87, 59]
 ```
+*Note: Utilizing an external canvas and context will significantly improve performance when batch analyzing a large number of images. The `willReadFrequently` can further improve performance. Additionally, grouping images of the same size while batching will minimize state changes.*
