@@ -43,4 +43,4 @@ const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d', { willReadFrequently: true });
 huehawk(image, 1, canvas, ctx); // Example: [245, 87, 59]
 ```
-*Note: Utilizing an external canvas and context will significantly improve performance when batch analyzing a large number of images. The `willReadFrequently` can further improve performance. Additionally, grouping images of the same size while batching will minimize state changes.*
+*Note: Utilizing an external canvas and context will significantly improve performance when batch analyzing a large number of images. The `willReadFrequently` attribute can further improve performance. Additionally, grouping images of the same size while batching helps minimize state changes.*
