@@ -26,9 +26,11 @@ function huehawk(gImg, hMode = 1, gCanvas = null, gCtx = null) {
                 const cluster = distribution[j];
                 
                 if (Math.pow(cluster[0] - r, 2) + Math.pow(cluster[1] - g, 2) + Math.pow(cluster[2] - b, 2) < 5000) {
-                    cluster[0] = (cluster[0] * cluster[3] + r) / (cluster[3] + 1);
-                    cluster[1] = (cluster[1] * cluster[3] + g) / (cluster[3] + 1);
-                    cluster[2] = (cluster[2] * cluster[3] + b) / (cluster[3] + 1);
+                    const recip = 1 / (cluster[3] + 1);
+
+                    cluster[0] = (cluster[0] * cluster[3] + r) * recip;
+                    cluster[1] = (cluster[1] * cluster[3] + g) * recip;
+                    cluster[2] = (cluster[2] * cluster[3] + b) * recip;
                     cluster[3]++;
                     indexed = true;
 
@@ -46,19 +48,19 @@ function huehawk(gImg, hMode = 1, gCanvas = null, gCtx = null) {
     if (hMode === 2) {
         return distribution;
     } else if (hMode === 3) {
-        let [sumR, sumG, sumB, totalTally] = [0, 0, 0, 0];
+        let [sumR, sumG, sumB, sumTally] = [0, 0, 0, 0];
 
         for (const [r, g, b, tally] of distribution) {
-            totalTally += tally;
+            sumTally += tally;
             sumR += r * tally;
             sumG += g * tally;
             sumB += b * tally;
         }
 
         primary = [
-            sumR / totalTally,
-            sumG / totalTally,
-            sumB / totalTally
+            sumR / sumTally,
+            sumG / sumTally,
+            sumB / sumTally
         ];
     } else if (distribution.length > 0 && hMode !== 4) {
         let peak = 0;
