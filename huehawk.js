@@ -47,35 +47,37 @@ function huehawk(gImg, hMode = 1, gCanvas = null, gCtx = null) {
 
     if (hMode === 2) {
         return distribution;
-    } else if (hMode === 3) {
-        let [sumR, sumG, sumB, sumTally] = [0, 0, 0, 0];
+    } else if (hMode !== 4 && distribution.length > 0) {
+        if (hMode === 3) {
+            let [sumR, sumG, sumB, sumTally] = [0, 0, 0, 0];
 
-        for (const [r, g, b, tally] of distribution) {
-            sumTally += tally;
-            sumR += r * tally;
-            sumG += g * tally;
-            sumB += b * tally;
-        }
+            for (const [r, g, b, tally] of distribution) {
+                sumTally += tally;
+                sumR += r * tally;
+                sumG += g * tally;
+                sumB += b * tally;
+            }
 
-        primary = [
-            sumR / sumTally,
-            sumG / sumTally,
-            sumB / sumTally
-        ];
-    } else if (distribution.length > 0 && hMode !== 4) {
-        let peak = 0;
+            primary = [
+                sumR / sumTally,
+                sumG / sumTally,
+                sumB / sumTally
+            ];
+        } else {
+            let peak = 0;
 
-        for (const [r, g, b, tally] of distribution) {
-            const max = Math.max(r, g, b);
-            const min = Math.min(r, g, b);
-            const chroma = max - min;
-            const normalize = max === 0 ? 1 : max;
-            const vibrancy = chroma === 0 ? 0 : chroma / normalize;
-            const rating = tally * vibrancy;
+            for (const [r, g, b, tally] of distribution) {
+                const max = Math.max(r, g, b);
+                const min = Math.min(r, g, b);
+                const chroma = max - min;
+                const normalize = max === 0 ? 1 : max;
+                const vibrancy = chroma === 0 ? 0 : chroma / normalize;
+                const rating = tally * vibrancy;
 
-            if (rating > peak) {
-                peak = rating;
-                primary = [r, g, b];
+                if (rating > peak) {
+                    peak = rating;
+                    primary = [r, g, b];
+                }
             }
         }
     } else {
