@@ -46,7 +46,26 @@ function huehawk(gImg, hMode = 1, gCanvas = null, gCtx = null) {
     let primary = [0, 0, 0];
 
     if (hMode === 2) {
-        return distribution;
+        if (distribution.length > 0) {
+            for (let i = 0; i < distribution.length; i++) {
+                const key = distribution[i];
+                let j = i - 1;
+
+                while (j >= 0 && distribution[j][3] < key[3]) {
+                    distribution[j + 1] = distribution[j];
+                    j--;
+                }
+
+                for (let k = 0; k < 3; k++)
+                    key[k] = Math.round(key[k]);
+
+                distribution[j + 1] = key;
+            }
+
+            return distribution;
+        } else {
+            return [];
+        }
     } else if (hMode !== 4 && distribution.length > 0) {
         if (hMode === 3) {
             let [sumR, sumG, sumB, sumTally] = [0, 0, 0, 0];
