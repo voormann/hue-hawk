@@ -83,7 +83,22 @@ function huehawk(gImg, hMode = 1, gCanvas = null, gCtx = null) {
                 sumB / sumTally
             ];
         } else {
+            const scatterIndices = [
+                0,
+                (hCanvas.width - 1) * 4,
+                (hCanvas.height - 1) * hCanvas.width * 4,
+                (hCanvas.height - 1) * hCanvas.width * 4 + (hCanvas.width - 1) * 4
+            ];
+            const intersect = scatterIndices.map(index => [pixels[index], pixels[index + 1], pixels[index + 2]]);
+            const masked = intersect.every(color => {
+                return Math.abs(color[0] - intersect[0][0]) < 10 &&
+                       Math.abs(color[1] - intersect[0][1]) < 10 &&
+                       Math.abs(color[2] - intersect[0][2]) < 10;
+            });
+            const occlude = masked ? intersect[0] : null;
             let peak = 0;
+            let maskPeak = 0;
+            let secondary = [0, 0, 0];
 
             for (const [r, g, b, tally] of distribution) {
                 const max = Math.max(r, g, b);
@@ -97,7 +112,19 @@ function huehawk(gImg, hMode = 1, gCanvas = null, gCtx = null) {
                     peak = rating;
                     primary = [r, g, b];
                 }
+
+                if (rating > maskPeak && occlude) {
+                    if (Math.abs(r - occlude[0]) > 10 &&
+                        Math.abs(g - occlude[1]) > 10 &&
+                        Math.abs(b - occlude[2]) > 10) {
+                        maskPeak = rating;
+                        secondary = [r, g, b];
+                    }
+                }
             }
+
+            if (maskPeak > 0)
+                primary = secondary;
         }
     } else {
         let [r, g, b] = [0, 0, 0];
