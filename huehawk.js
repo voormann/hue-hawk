@@ -24,7 +24,7 @@ function huehawk(gImg, hMode = 1, gCanvas = null, gCtx = null) {
 
             for (let j = 0; j < distribution.length; j++) {
                 const cluster = distribution[j];
-                
+
                 if (Math.pow(cluster[0] - r, 2) + Math.pow(cluster[1] - g, 2) + Math.pow(cluster[2] - b, 2) < 5000) {
                     const recip = 1 / (cluster[3] + 1);
 
@@ -84,21 +84,26 @@ function huehawk(gImg, hMode = 1, gCanvas = null, gCtx = null) {
             ];
         } else {
             const scatterIndices = [
-                0,
                 (hCanvas.width - 1) * 4,
                 (hCanvas.height - 1) * hCanvas.width * 4,
                 (hCanvas.height - 1) * hCanvas.width * 4 + (hCanvas.width - 1) * 4
             ];
-            const intersect = scatterIndices.map(index => [pixels[index], pixels[index + 1], pixels[index + 2]]);
-            const masked = intersect.every(color => {
-                return Math.abs(color[0] - intersect[0][0]) < 10 &&
-                       Math.abs(color[1] - intersect[0][1]) < 10 &&
-                       Math.abs(color[2] - intersect[0][2]) < 10;
-            });
-            const occlude = masked ? intersect[0] : null;
+            let occlude = [pixels[0], pixels[1], pixels[2]];
+
+            for (const index of scatterIndices) {
+                const color = [pixels[index], pixels[index + 1], pixels[index + 2]];
+
+                if (Math.abs(color[0] - occlude[0]) > 5 ||
+                    Math.abs(color[1] - occlude[1]) > 5 ||
+                    Math.abs(color[2] - occlude[2]) > 5) {
+                    occlude = null;
+
+                    break;
+                }
+            }
+
             let peak = 0;
-            let maskPeak = 0;
-            let secondary = [0, 0, 0];
+            let subpeak = 0;
 
             for (const [r, g, b, tally] of distribution) {
                 const max = Math.max(r, g, b);
@@ -108,23 +113,17 @@ function huehawk(gImg, hMode = 1, gCanvas = null, gCtx = null) {
                 const vibrancy = chroma === 0 ? 0 : chroma / normalize;
                 const rating = tally * vibrancy;
 
-                if (rating > peak) {
+                if (occlude && rating > subpeak &&
+                    Math.abs(r - occlude[0]) > 5 &&
+                    Math.abs(g - occlude[1]) > 5 &&
+                    Math.abs(b - occlude[2]) > 5) {
+                    subpeak = rating;
+                    primary = [r, g, b];
+                } else if (subpeak === 0 && rating > peak) {
                     peak = rating;
                     primary = [r, g, b];
                 }
-
-                if (rating > maskPeak && occlude) {
-                    if (Math.abs(r - occlude[0]) > 10 &&
-                        Math.abs(g - occlude[1]) > 10 &&
-                        Math.abs(b - occlude[2]) > 10) {
-                        maskPeak = rating;
-                        secondary = [r, g, b];
-                    }
-                }
             }
-
-            if (maskPeak > 0)
-                primary = secondary;
         }
     } else {
         let [r, g, b] = [0, 0, 0];
