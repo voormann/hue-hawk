@@ -83,10 +83,17 @@ function huehawk(gImg, hMode = 1, gCanvas = null, gCtx = null) {
                 sumB / sumTally
             ];
         } else {
+            const centerX = Math.floor(hCanvas.width / 2);
+            const centerY = Math.floor(hCanvas.height / 2);
+            const lastIndex = (hCanvas.width * hCanvas.height - 1) * 4;
             const scatterIndices = [
+                centerX * 4,
                 (hCanvas.width - 1) * 4,
-                (hCanvas.height - 1) * hCanvas.width * 4,
-                (hCanvas.height - 1) * hCanvas.width * 4 + (hCanvas.width - 1) * 4
+                centerY * hCanvas.width * 4,
+                (centerY * hCanvas.width + hCanvas.width - 1) * 4,
+                (hCanvas.width * (hCanvas.height - 1)) * 4,
+                lastIndex - centerX * 4,
+                lastIndex
             ];
             let occlude = [pixels[0], pixels[1], pixels[2]];
 
